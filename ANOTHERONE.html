@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLULLY — A Little Bookish World</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  --navy:#17365b;
+  --blue:#79b8df;
+  --pink:#f6bfd2;
+  --cream:#fff9f5;
+  --white:#ffffff;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  font-family:'DM Sans',sans-serif;
+  color:var(--navy);
+  background:
+    radial-gradient(ellipse at 15% 12%,#fff 0 3%,transparent 22%),
+    radial-gradient(ellipse at 85% 20%,#fff 0 4%,transparent 24%),
+    linear-gradient(145deg,#d9efff,#fce1ed 55%,#d8eaff);
+  background-attachment:fixed;
+}
+
+button,input { font:inherit; }
+
+header {
+  padding:22px 7%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#ffffffc9;
+  backdrop-filter:blur(14px);
+  position:sticky;
+  top:0;
+  z-index:10;
+  border-bottom:1px solid #ffffff;
+}
+
+.logo {
+  font-family:'Playfair Display',serif;
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:3px;
+  color:#24517e;
+}
+
+.logo span { color:#e995b5; }
+
+nav {
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+
+nav a {
+  text-decoration:none;
+  color:var(--navy);
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.cart-button {
+  background:#244e78;
+  color:white;
+  border:0;
+  padding:11px 19px;
+  border-radius:30px;
+  cursor:pointer;
+}
+
+.hero {
+  min-height:410px;
+  padding:80px 8%;
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-content { max-width:560px; position:relative; z-index:2; }
+
+.eyebrow {
+  background:#ffffffb8;
+  padding:9px 17px;
+  border-radius:30px;
+  display:inline-block;
+  font-size:12px;
+  letter-spacing:2px;
+  color:#477ba5;
+}
+
+.hero h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(42px,6vw,70px);
+  line-height:1.08;
+  margin:22px 0 15px;
+}
+
+.hero h1 span { color:#d77fa3; }
+
+.hero p {
+  color:#526d89;
+  line-height:1.8;
+  max-width:430px;
+}
+
+.hero-button {
+  margin-top:20px;
+  padding:14px 25px;
+  border:0;
+  border-radius:30px;
+  background:#244e78;
+  color:white;
+  cursor:pointer;
+}
+
+.hero-decoration {
+  position:absolute;
+  right:10%;
+  top:55px;
+  font-size:150px;
+  filter:drop-shadow(0 15px 15px #7599b544);
+  transform:rotate(9deg);
+}
+
+.cloud {
+  position:absolute;
+  background:#ffffff9c;
+  width:170px;
+  height:48px;
+  border-radius:50px;
+  filter:blur(1px);
+}
+
+.cloud:before,.cloud:after {
+  content:"";
+  position:absolute;
+  background:inherit;
+  border-radius:50%;
+}
+
+.cloud:before { width:75px;height:75px;top:-35px;left:25px; }
+.cloud:after { width:60px;height:60px;top:-25px;right:25px; }
+
+.cloud.one { right:12%;bottom:45px; }
+.cloud.two { right:35%;top:65px;transform:scale(.6); }
+
+section { padding:45px 7%; }
+
+.section-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+.section-heading h2 {
+  font-family:'Playfair Display',serif;
+  font-size:34px;
+  margin:0;
+}
+
+.section-heading p { color:#6c8299;margin:7px 0 0; }
+
+.search-row {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+.search-row input {
+  flex:1;
+  min-width:200px;
+  padding:14px 20px;
+  border:1px solid #ffffff;
+  border-radius:30px;
+  outline:none;
+  background:#ffffffd9;
+}
+
+.filters {
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-bottom:28px;
+}
+
+.filter {
+  padding:9px 17px;
+  border-radius:30px;
+  border:1px solid #ffffff;
+  background:#ffffffa8;
+  color:#345979;
+  cursor:pointer;
+}
+
+.filter.active {
+  background:#244e78;
+  color:white;
+}
+
+.book-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
+  gap:25px;
+}
+
+.book-card {
+  background:#ffffffc9;
+  padding:14px;
+  border-radius:18px;
+  cursor:pointer;
+  transition:.25s;
+  border:1px solid #ffffff;
+}
+
+.book-card:hover {
+  transform:translateY(-7px);
+  box-shadow:0 15px 35px #6688a322;
+}
+
+.cover {
+  height:225px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:15px;
+  color:white;
+  position:relative;
+  overflow:hidden;
+  box-shadow:4px 7px 12px #273d5430;
+  background:linear-gradient(145deg,#345d86,#a4cce7);
+}
+
+.cover:before {
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:1px solid #ffffff8c;
+  border-radius:5px;
+}
+
+.cover-inner { position:relative; z-index:1; }
+
+.cover-symbol {
+  font-size:42px;
+  display:block;
+  margin-bottom:20px;
+}
+
+.cover-title {
+  font-family:'Playfair Display',serif;
+  font-size:19px;
+  line-height:1.2;
+  font-weight:700;
+}
+
+.cover-author {
+  font-size:9px;
+  letter-spacing:2px;
+  margin-top:12px;
+  text-transform:uppercase;
+}
+
+.cover.fantasy { background:linear-gradient(145deg,#192c57,#8867a9,#e6a8c9); }
+.cover.romance { background:linear-gradient(145deg,#e58eac,#f6c9d8,#a85b84); }
+.cover.mystery { background:linear-gradient(145deg,#172c42,#49677a,#a5a6ad); }
+.cover.thriller { background:linear-gradient(145deg,#182331,#713e55,#c07b79); }
+.cover.scifi { background:linear-gradient(145deg,#102b53,#287fa5,#8dcbd4); }
+.cover.classics { background:linear-gradient(145deg,#9d704e,#d5b78a,#6e574d); }
+.cover.ya { background:linear-gradient(145deg,#5d83a9,#b3a4d7,#e7a6c7); }
+.cover.fiction { background:linear-gradient(145deg,#477b78,#9fc8b9,#e5c7a6); }
+
+.book-info { padding:13px 3px 3px; }
+
+.book-info h3 {
+  font-family:'Playfair Display',serif;
+  font-size:17px;
+  margin:0 0 6px;
+}
+
+.book-info p { margin:0;color:#71869b;font-size:12px; }
+
+.book-bottom {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:13px;
+}
+
+.price { font-weight:700;color:#345b83; }
+
+.small-button {
+  border:0;
+  background:#f7dce8;
+  color:#75415d;
+  padding:8px 12px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.about {
+  background:#ffffffb9;
+  border-radius:25px;
+  text-align:center;
+  padding:55px 25px;
+  margin:35px 7%;
+}
+
+.about h2 {
+  font-family:'Playfair Display',serif;
+  font-size:34px;
+}
+
+.about p {
+  max-width:650px;
+  margin:auto;
+  line-height:1.9;
+  color:#637d95;
+}
+
+footer {
+  text-align:center;
+  padding:35px 15px;
+  color:#58718b;
+  font-size:13px;
+}
+
+/* PRODUCT DETAIL */
+.overlay {
+  position:fixed;
+  inset:0;
+  background:#14263c99;
+  z-index:30;
+  display:none;
+  justify-content:center;
+  align-items:center;
+  padding:18px;
+}
+
+.overlay.show { display:flex; }
+
+.modal {
+  background:#fffafd;
+  border-radius:22px;
+  width:min(750px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:25px;
+  position:relative;
+}
+
+.close {
+  position:absolute;
+  right:18px;
+  top:14px;
+  border:0;
+  background:#f5e2ec;
+  border-radius:50%;
+  width:35px;
+  height:35px;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.detail {
+  display:grid;
+  grid-template-columns:minmax(150px,240px) 1fr;
+  gap:28px;
+  padding-top:20px;
+}
+
+.detail .cover { height:330px; }
+
+.detail h2 {
+  font-family:'Playfair Display',serif;
+  font-size:30px;
+  margin:8px 0;
+}
+
+.detail p { line-height:1.8;color:#687e91; }
+
+.primary {
+  border:0;
+  border-radius:25px;
+  background:#244e78;
+  color:white;
+  padding:13px 22px;
+  cursor:pointer;
+  margin-top:12px;
+}
+
+.cart-list { padding:15px 0; }
+
+.cart-item {
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  border-bottom:1px solid #eee;
+  padding:13px 0;
+}
+
+.cart-total {
+  font-size:20px;
+  font-weight:700;
+  text-align:right;
+}
+
+.empty {
+  text-align:center;
+  padding:45px 10px;
+  color:#8294a7;
+}
+
+@media(max-width:650px) {
+  header { padding:15px 5%; }
+  nav { gap:10px; }
+  nav a { display:none; }
+  .hero { padding:65px 7%; }
+  .hero-decoration { opacity:.25;right:0; }
+  .detail { grid-template-columns:1fr; }
+  .detail .cover { max-width:220px; }
+  section { padding:35px 5%; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">BLU<span>LL</span>Y.</div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#books">Books</a>
+    <a href="#about">About</a>
+    <button class="cart-button" onclick="openCart()">♡ Cart (<span id="cartCount">0</span>)</button>
+  </nav>
+</header>
+
+<div class="hero" id="home">
+  <div class="cloud one"></div>
+  <div class="cloud two"></div>
+  <div class="hero-content">
+    <span class="eyebrow">A LITTLE WORLD OF STORIES ✦</span>
+    <h1>Find your next <span>favorite</span> chapter.</h1>
+    <p>Somewhere between the pages, you'll find a world that feels like yours. Discover stories, explore new worlds and fall in love with reading.</p>
+    <button class="hero-button" onclick="document.getElementById('books').scrollIntoView({behavior:'smooth'})">Explore the library →</button>
+  </div>
+  <div class="hero-decoration">📚</div>
+</div>
+
+<section id="books">
+  <div class="section-heading">
+    <div>
+      <h2>The Book Nook ♡</h2>
+      <p>Little stories, big adventures.</p>
+    </div>
+    <span id="bookCount"></span>
+  </div>
+
+  <div class="search-row">
+    <input id="search" type="search" placeholder="Search books or authors..." oninput="renderBooks()">
+  </div>
+
+  <div class="filters" id="filters"></div>
+  <div class="book-grid" id="bookGrid"></div>
+</section>
+
+<div class="about" id="about">
+  <h2>A place for book lovers ♡</h2>
+  <p>Welcome to BLULLY, your cozy little reading corner. From magical kingdoms to mysterious secrets, romantic stories to faraway galaxies, there's a book waiting for every kind of reader. Make yourself comfortable and stay a little longer.</p>
+</div>
+
+<footer>
+  <div class="logo">BLU<span>LL</span>Y.</div>
+  <p>Made with love, books and a little bit of magic. ✿</p>
+  <p>© 2026 BLULLY Bookstore</p>
+</footer>
+
+<!-- PRODUCT DETAIL WINDOW -->
+<div class="overlay" id="productOverlay" onclick="outsideClose(event,'productOverlay')">
+  <div class="modal">
+    <button class="close" onclick="closeModal('productOverlay')">×</button>
+    <div id="productContent"></div>
+  </div>
+</div>
+
+<!-- CART WINDOW -->
+<div class="overlay" id="cartOverlay" onclick="outsideClose(event,'cartOverlay')">
+  <div class="modal">
+    <button class="close" onclick="closeModal('cartOverlay')">×</button>
+    <h2 style="font-family:'Playfair Display',serif">Your Book Bag ♡</h2>
+    <div id="cartContent"></div>
+  </div>
+</div>
+
+<script>
+const books = [
+["The Hobbit","J.R.R. Tolkien","Fantasy",1800,"🐉"],
+["A Court of Thorns and Roses","Sarah J. Maas","Fantasy",2200,"🌹"],
+["The Cruel Prince","Holly Black","Fantasy",1900,"👑"],
+["The Name of the Wind","Patrick Rothfuss","Fantasy",2400,"✨"],
+["The Lion, the Witch and the Wardrobe","C.S. Lewis","Fantasy",1600,"🦁"],
+["The Fellowship of the Ring","J.R.R. Tolkien","Fantasy",2100,"💍"],
+["Six of Crows","Leigh Bardugo","Fantasy",2000,"🗝️"],
+["The House in the Cerulean Sea","TJ Klune","Fantasy",1950,"🏡"],
+
+["Pride and Prejudice","Jane Austen","Romance",1200,"🌷"],
+["The Fault in Our Stars","John Green","Romance",1500,"💗"],
+["Me Before You","Jojo Moyes","Romance",1700,"🌸"],
+["The Notebook","Nicholas Sparks","Romance",1450,"💌"],
+["The Love Hypothesis","Ali Hazelwood","Romance",1900,"💕"],
+["Better Than the Movies","Lynn Painter","Romance",1600,"🎬"],
+["The Rosie Project","Graeme Simsion","Romance",1750,"🌼"],
+["To All the Boys I've Loved Before","Jenny Han","Romance",1500,"💖"],
+
+["And Then There Were None","Agatha Christie","Mystery",1300,"🔎"],
+["Murder on the Orient Express","Agatha Christie","Mystery",1400,"🚂"],
+["The Hound of the Baskervilles","Arthur Conan Doyle","Mystery",1250,"🐾"],
+["The Thursday Murder Club","Richard Osman","Mystery",1900,"🕵️"],
+["The Girl with the Dragon Tattoo","Stieg Larsson","Mystery",2100,"🐉"],
+["The Westing Game","Ellen Raskin","Mystery",1450,"♟️"],
+["The Secret Garden","Frances Hodgson Burnett","Mystery",1100,"🌿"],
+["A Good Girl's Guide to Murder","Holly Jackson","Mystery",1800,"📓"],
+
+["The Silent Patient","Alex Michaelides","Thriller",1800,"🤫"],
+["Gone Girl","Gillian Flynn","Thriller",1900,"🖤"],
+["The Woman in the Window","A.J. Finn","Thriller",1750,"🪟"],
+["The Reversal","Michael Connelly","Thriller",1850,"⚖️"],
+["The Da Vinci Code","Dan Brown","Thriller",1700,"🔐"],
+["The Girl on the Train","Paula Hawkins","Thriller",1800,"🚆"],
+["The Inheritance Games","Jennifer Lynn Barnes","Thriller",1700,"♠️"],
+["One of Us Is Lying","Karen M. McManus","Thriller",1650,"👀"],
+
+["Dune","Frank Herbert","Sci-Fi",2200,"🪐"],
+["The Martian","Andy Weir","Sci-Fi",1900,"🚀"],
+["Project Hail Mary","Andy Weir","Sci-Fi",2300,"🌌"],
+["Ender's Game","Orson Scott Card","Sci-Fi",1750,"🛰️"],
+["Fahrenheit 451","Ray Bradbury","Sci-Fi",1300,"🔥"],
+["The Time Machine","H.G. Wells","Sci-Fi",1200,"⏳"],
+["The War of the Worlds","H.G. Wells","Sci-Fi",1350,"👽"],
+["Ready Player One","Ernest Cline","Sci-Fi",2000,"🎮"],
+
+["Jane Eyre","Charlotte Brontë","Classics",1250,"🕯️"],
+["Wuthering Heights","Emily Brontë","Classics",1300,"🍂"],
+["Little Women","Louisa May Alcott","Classics",1400,"🌻"],
+["The Great Gatsby","F. Scott Fitzgerald","Classics",1100,"🥂"],
+["Moby-Dick","Herman Melville","Classics",1500,"🐋"],
+["Dracula","Bram Stoker","Classics",1250,"🦇"],
+["Frankenstein","Mary Shelley","Classics",1300,"⚡"],
+["The Picture of Dorian Gray","Oscar Wilde","Classics",1350,"🖼️"],
+
+["The Hunger Games","Suzanne Collins","Young Adult",1600,"🏹"],
+["Divergent","Veronica Roth","Young Adult",1550,"🦋"],
+["Wonder","R.J. Palacio","Young Adult",1450,"⭐"],
+["The Perks of Being a Wallflower","Stephen Chbosky","Young Adult",1500,"🌈"],
+["Eleanor & Park","Rainbow Rowell","Young Adult",1650,"🎧"],
+["The Maze Runner","James Dashner","Young Adult",1600,"🏃"],
+["Anne of Green Gables","L.M. Montgomery","Young Adult",1200,"🌺"],
+["Stargirl","Jerry Spinelli","Young Adult",1350,"🌟"],
+
+["The Alchemist","Paulo Coelho","Fiction",1400,"☀️"],
+["The Book Thief","Markus Zusak","Fiction",1750,"📖"],
+["A Man Called Ove","Fredrik Backman","Fiction",1650,"☕"],
+["The Midnight Library","Matt Haig","Fiction",1800,"🌙"],
+["Life of Pi","Yann Martel","Fiction",1600,"🐅"],
+["The Kite Runner","Khaled Hosseini","Fiction",1700,"🪁"],
+["The Secret History","Donna Tartt","Fiction",2100,"🏛️"],
+["Where the Crawdads Sing","Delia Owens","Fiction",1800,"🪶"]
+].map((b,i)=>({
+ id:i,title:b[0],author:b[1],genre:b[2],price:b[3],symbol:b[4],
+ description:`Discover ${b[0]}, a wonderful ${b[2].toLowerCase()} story by ${b[1]}. Add this title to your reading list and enjoy a new adventure between the pages.`
+}));
+
+const genres=["All","Fantasy","Romance","Mystery","Thriller","Sci-Fi","Classics","Young Adult","Fiction"];
+let activeGenre="All";
+let cart=[];
+
+function makeCover(book) {
+ return `<div class="cover ${book.genre.toLowerCase().replaceAll(" ","").replace("youngadult","ya").replace("sci-fi","scifi")}">
+   <div class="cover-inner">
+     <span class="cover-symbol">${book.symbol}</span>
+     <div class="cover-title">${book.title}</div>
+     <div class="cover-author">${book.author}</div>
+   </div>
+ </div>`;
+}
+
+function setupFilters(){
+ document.getElementById("filters").innerHTML=genres.map(g=>
+ `<button class="filter ${g===activeGenre?'active':''}" onclick="setGenre('${g}')">${g}</button>`
+ ).join("");
+}
+
+function setGenre(g){
+ activeGenre=g;
+ setupFilters();
+ renderBooks();
+}
+
+function renderBooks(){
+ const term=document.getElementById("search").value.toLowerCase();
+ const shown=books.filter(b=>
+ (activeGenre==="All"||b.genre===activeGenre) &&
+ (b.title.toLowerCase().includes(term)||b.author.toLowerCase().includes(term))
+ );
+ document.getElementById("bookCount").textContent=shown.length+" books";
+ document.getElementById("bookGrid").innerHTML=shown.length?shown.map(b=>`
+ <article class="book-card" onclick="openProduct(${b.id})">
+   ${makeCover(b)}
+   <div class="book-info">
+     <h3>${b.title}</h3>
+     <p>${b.author}</p>
+     <div class="book-bottom">
+       <span class="price">Rs. ${b.price.toLocaleString()}</span>
+       <button class="small-button" onclick="event.stopPropagation();addToCart(${b.id})">+ Add</button>
+     </div>
+   </div>
+ </article>`).join(""):`<div class="empty">No books found. Try another search ♡</div>`;
+}
+
+function openProduct(id){
+ const b=books.find(x=>x.id===id);
+ document.getElementById("productContent").innerHTML=`
+ <div class="detail">
+   ${makeCover(b)}
+   <div>
+     <small>${b.genre.toUpperCase()} · BLULLY COLLECTION</small>
+     <h2>${b.title}</h2>
+     <p>By ${b.author}</p>
+     <h3>Rs. ${b.price.toLocaleString()}</h3>
+     <p>${b.description}</p>
+     <button class="primary" onclick="addToCart(${b.id});closeModal('productOverlay')">Add to my book bag ♡</button>
+   </div>
+ </div>`;
+ document.getElementById("productOverlay").classList.add("show");
+}
+
+function addToCart(id){
+ const b=books.find(x=>x.id===id);
+ const existing=cart.find(x=>x.id===id);
+ if(existing) existing.qty++;
+ else cart.push({...b,qty:1});
+ updateCartCount();
+}
+
+function updateCartCount(){
+ document.getElementById("cartCount").textContent=cart.reduce((n,b)=>n+b.qty,0);
+}
+
+function openCart(){
+ renderCart();
+ document.getElementById("cartOverlay").classList.add("show");
+}
+
+function renderCart(){
+ const box=document.getElementById("cartContent");
+ if(!cart.length){
+  box.innerHTML='<div class="empty">Your book bag is waiting for a story! 📚</div>';
+  return;
+ }
+ const total=cart.reduce((n,b)=>n+b.price*b.qty,0);
+ box.innerHTML=`
+ <div class="cart-list">
+ ${cart.map(b=>`
+  <div class="cart-item">
+   <div><strong>${b.title}</strong><br><small>Rs. ${b.price.toLocaleString()} × ${b.qty}</small></div>
+   <div>
+    <button class="small-button" onclick="changeQty(${b.id},-1)">−</button>
+    <button class="small-button" onclick="changeQty(${b.id},1)">+</button>
+   </div>
+  </div>`).join("")}
+ </div>
+ <p class="cart-total">Total: Rs. ${total.toLocaleString()}</p>
+ <button class="primary" onclick="checkout()">Continue to checkout</button>`;
+}
+
+function changeQty(id,amount){
+ const item=cart.find(b=>b.id===id);
+ if(!item)return;
+ item.qty+=amount;
+ if(item.qty<=0)cart=cart.filter(b=>b.id!==id);
+ updateCartCount();
+ renderCart();
+}
+
+function checkout(){
+ alert("Thank you for visiting BLULLY! ♡ This is a demo checkout. Online payments and real orders are not connected yet.");
+}
+
+function closeModal(id){
+ document.getElementById(id).classList.remove("show");
+}
+
+function outsideClose(event,id){
+ if(event.target.id===id)closeModal(id);
+}
+
+setupFilters();
+renderBooks();
+</script>
+</body>
+</html>
